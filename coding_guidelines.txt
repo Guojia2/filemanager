@@ -1,0 +1,64 @@
+1. Source Files
+
+The last line of each file must be followed by a new line character (Required by C++).
+
+Each class should have its own declaration (header) file, and its own implementation file; file names for both (.h and .cpp respectively) should be the same as the class name.
+
+1.1.  Header/Declaration Files (.h)
+
+Header files should use the “.h" extension, and declare only one class. The name of the .h file should be the same as the class it declares.
+
+Each .h file should have an include guard, to prevent multiple inclusions of the file.
+
+The #include statements should list system and standard libraries first, followed by all other headers using quotes “".
+
+Access specifiers should all be explicit, whether they are “public", “protected" or “private".
+
+All data members should be declared as private and have getter and setter methods where appropriate.
+
+Header files should not include a “using namespace" command. All names should be explicitly resolved to a namespace.
+
+1.2.  Implementation/Definition Files (.cpp)
+
+Implementation files should use the “.cpp" extension, and declare the function implementations of only one class. The name of the .cpp file should be the same as the class whose functions it implements.
+
+The order of functions implemented in the file should be the same as the order of the function prototypes in the corresponding header file.
+
+You may use the “using namespace std;" directive if you wish.
+
+You must not, under any circumstances, #include one .cpp file into another.  If you feel the need to do so, then you are doing something wrong.
+
+2.  Commenting
+
+Each file should begin with a block comment denoting the following at minimum:  Author, Description of file contents, Date.
+
+Each function definition (in the .cpp file) should be preceded by a block comment containing the following at minimum:  Function name, description, parameter descriptions, return description.
+
+Comments should be used to give the overall algorithm used and enable a C++ computer programmer to understand how/why the program accomplishes its goal (or how/why it might fail). Comments should only provide information that is not available from the code itself. 
+
+
+3.  General
+
+Variables and constants should have meaningful names. Constant names should be all uppercase.
+
+Indentation should be used to denote nested code blocks.
+
+White space should be used to separate logical blocks of code and to improve the readability of the file.
+
+Classes should always define a constructor which initializes all member data to appropriate default values.
+
+Constructors should initialize all member data.
+
+If the object manages resources (has pointer member data), the class should explicitly define a copy constructor and an assignment operator (operator=) which make deep copies (when appropriate) of the object.
+
+Classes should always define a destructor, even if it has no special work to do.
+
+Avoid global variables.
+
+Allocate memory using “new" and “delete" where possible, or smart pointers. The C memory management functions (“malloc()", “realloc()",and “free()") should only be used if absolutely necessary.
+
+The C++ “string" class should be used to represent strings. The C string libraries should not be used (with the exception of c_str(), when a C-style string is required for standard library functions).
+
+STL containers like “vector" should be favoured rather than manually managed arrays.
+
+Const correctness is encouraged, but for the first assignment is not strictly required, as long as the principles of data encapsulation are upheld.
