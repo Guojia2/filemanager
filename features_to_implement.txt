@@ -1,0 +1,24 @@
+- Some sort of menu or button panel providing access to the file manager's operations.  Depending on the platform, wxWidgets may style this to be part of the application's window or as a separate menu bar. 
+- A status bar to provide information on operations as discussed below.
+- A collection of pop-ups and dialogs for getting other user input and to convey error messages to the user.
+
+In terms of file operations, the file manager must be able to do the following:
+
+   - Open a file using the system's default application for that type of file.  (Don't worry, wxWidgets will do the work for you here!)  An attempt to open a directory will change the directory being browsed to that directory, updating the name in the text bar as well.
+   - Create a new directory, prompting the user to enter the name.
+   - Rename a file, prompting the user to enter the new name of the file.
+   - Delete a file, prompting the user for confirmation before deletion.
+   - Copy a file, marking a file in a virtual clipboard to be copied with a later paste operation.  The status bar should display a message indicating the given file was marked for copying.
+   - Cut a file, marking a file in a virtual clipboard to be moved with a later paste operation.  The status bar should display a message indicating the given file was marked for cutting.
+   - Paste a file, completing a copy or cut operation by copying or moving the marked file into the current directory depending on whether it was copied or cut in the first place.  If a file already exists in the same location, the user should be prompted if they want to overwrite it before proceeding.  When done, the status bar should be updated to indicate that the clipboard is now empty.  
+   - Refresh the display, getting a fresh listing of files in the current directory and updating the display accordingly.
+   - Exit the application when done.
+
+All of the above operations should be accessible by clicking on options in the file manager's menu or main button panel, or by using keyboard shortcuts. Opening files or changing directories should also be accomplished by double-clicking the corresponding items in the file listing of the interface.
+
+
+Also, note that the "virtual clipboard" being used for copying/cutting/pasting files is not really a clipboard of any kind.  You simply just need to record and remember the path and name of the file to be copy or moved when the user later chooses to paste.  
+
+For simplicity, you can assume that file operations will only be performed on a single file at a time (and wxWidgets can allow you to prevent the selection of multiple list items at the same time too).  You can support operations on multiple files at a time if you'd like, but it might be simpler to assume one at a time for this assignment.  Your operations should be performable in the user interface on both files and directories (for opening, renaming, deleting, copying, cutting, and pasting), but you may have to implement things slightly differently depending on whether the user has selected a file or a directory. 
+
+In order to access the filesystem to implement the file operations, we will use the filesystem library  included in C++ 17 and newer.

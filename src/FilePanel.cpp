@@ -9,6 +9,7 @@ Date: 2026-01-31
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/datetime.h>
+#include <wx/sizer.h>
 
 // ---------------------------------------------------------------------------
 // Construction / destruction
@@ -63,6 +64,12 @@ void FilePanel::InitializeListControl()
     m_fileList->InsertColumn(COL_TYPE,     "Type",     wxLIST_FORMAT_LEFT,  80);
     m_fileList->InsertColumn(COL_SIZE,     "Size",     wxLIST_FORMAT_RIGHT, 100);
     m_fileList->InsertColumn(COL_MODIFIED, "Modified", wxLIST_FORMAT_LEFT,  160);
+
+    // Give this panel its own sizer so the list control fills it fully
+    // and resizes along with the window.
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(m_fileList, 1, wxEXPAND);
+    SetSizer(sizer);
 }
 
 // ---------------------------------------------------------------------------
@@ -120,11 +127,10 @@ bool FilePanel::LoadDirectory(const wxString& path)
         }
         else
         {
-            // GetSize() sets the value in the wxFileName object; call it first.
-            // this line previously caused a compilation error due to GetSize() returning an integer, which could not be cast to bool
-            if ((!file.GetSize().ToULong()) != 0)
+            if (file.GetSize().ToULong() != 0)
             {
-                 m_fileList->SetItem(index, COL_SIZE, FormatSize(file.GetSize().ToULong()));
+                m_fileList->SetItem(index, COL_SIZE,
+                                    FormatSize(file.GetSize().ToULong()));
             }
             else
             {
@@ -140,6 +146,24 @@ bool FilePanel::LoadDirectory(const wxString& path)
     }
 
     return true;
+}
+
+/*
+Function: GetSelectedName
+Description: Returns the filename of the currently selected row in the list
+             control.  Used by MainFrame to know which item the user wants to
+             act on.  Returns an empty string if no row is selected.
+Parameters: None
+Return: Name-column text of the selected item, or "" if none selected
+*/
+wxString FilePanel::GetSelectedName() const
+{
+    long selected = m_fileList->GetNextItem(-1);
+    if (selected == -1)
+    {
+        return "";
+    }
+    return m_fileList->GetItemText(selected, COL_NAME);
 }
 
 // ---------------------------------------------------------------------------

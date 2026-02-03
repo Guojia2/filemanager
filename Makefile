@@ -13,7 +13,8 @@ OBJ_DIR := obj
 OBJECTS := \
 	$(OBJ_DIR)/FileManagerApp.o \
 	$(OBJ_DIR)/MainFrame.o \
-	$(OBJ_DIR)/FilePanel.o
+	$(OBJ_DIR)/FilePanel.o \
+	$(OBJ_DIR)/FileOperations.o
 
 TARGET := filemanager
 

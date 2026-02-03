@@ -9,6 +9,7 @@ Date: 2026-01-31
 #define FILEPANEL_H
 
 #include <wx/panel.h>
+
 #include <wx/listctrl.h>
 #include <wx/string.h>
 #include <wx/filename.h>
@@ -25,6 +26,14 @@ public:
 
     // Read-only accessor so MainFrame can keep its address bar in sync.
     const wxString& CurrentPath() const { return m_currentPath; }
+
+    // Returns the Name-column text of the currently selected row, or an
+    // empty string when nothing is selected.
+    wxString GetSelectedName() const;
+
+    // Accessor for the underlying list control.  MainFrame needs this to
+    // bind the double-click event directly on the control.
+    wxListCtrl* GetListCtrl() const { return m_fileList; }
 
 private:
     // Column indices – kept in sync with InitializeListControl().

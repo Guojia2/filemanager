@@ -8,7 +8,7 @@ Date: 2026-01-31
 #include "MainFrame.h"
 
 #include <wx/wx.h>
-
+#include <wx/app.h> 
 /*
 Function: FileManagerApp
 Description: Constructs the application object.
