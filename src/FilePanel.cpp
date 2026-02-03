@@ -103,12 +103,21 @@ bool FilePanel::LoadDirectory(const wxString& path)
     long index = 0;
     while (hasFile)
     {
-        wxFileName file(path, filename);
+        // Construct the full path to this item by joining the directory
+        // path with the filename.  We can't use wxFileName(dir, file) because
+        // that assumes 'file' is a file, not a potential subdirectory.
+        wxString fullPath = path;
+        if (!fullPath.EndsWith(wxFileName::GetPathSeparator()))
+        {
+            fullPath += wxFileName::GetPathSeparator();
+        }
+        fullPath += filename;
 
         // --- Name -----------------------------------------------------------
         m_fileList->InsertItem(index, filename);
 
         // --- Type -----------------------------------------------------------
+        wxFileName file(fullPath);
         if (file.DirExists())
         {
             m_fileList->SetItem(index, COL_TYPE, "Directory");
@@ -158,12 +167,12 @@ Return: Name-column text of the selected item, or "" if none selected
 */
 wxString FilePanel::GetSelectedName() const
 {
-    long selected = m_fileList->GetNextItem(-1);
-    if (selected == -1)
+    long selected = m_fileList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (selected == wxNOT_FOUND)
     {
         return "";
     }
-    return m_fileList->GetItemText(selected, COL_NAME);
+    return m_fileList->GetItemText(selected);
 }
 
 // ---------------------------------------------------------------------------

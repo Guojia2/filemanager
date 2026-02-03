@@ -22,3 +22,4 @@ Also, note that the "virtual clipboard" being used for copying/cutting/pasting f
 For simplicity, you can assume that file operations will only be performed on a single file at a time (and wxWidgets can allow you to prevent the selection of multiple list items at the same time too).  You can support operations on multiple files at a time if you'd like, but it might be simpler to assume one at a time for this assignment.  Your operations should be performable in the user interface on both files and directories (for opening, renaming, deleting, copying, cutting, and pasting), but you may have to implement things slightly differently depending on whether the user has selected a file or a directory. 
 
 In order to access the filesystem to implement the file operations, we will use the filesystem library  included in C++ 17 and newer.
+

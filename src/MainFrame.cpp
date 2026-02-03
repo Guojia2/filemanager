@@ -10,10 +10,10 @@ Date: 2026-01-31
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <wx/filename.h>
-#include <wx/app.h>
 #include "MainFrame.h"
-#include "FileManagerApp.h"
 #include "FileOperations.h"
+#include <wx/app.h>
+#include "FileManagerApp.h"
 
 // ---------------------------------------------------------------------------
 // Construction / destruction
@@ -74,10 +74,8 @@ MainFrame::MainFrame(const wxString& title)
     // wxID_EXIT is handled automatically by wxWidgets on macOS (Cmd+Q) and
     // falls back to the Exit menu item on other platforms.
     wxDECLARE_APP(FileManagerApp);
-    Bind(wxEVT_MENU, [](wxCommandEvent& /*event*/) 
-    { 
-        wxGetApp().GetTopWindow()->Close(); 
-    }, wxID_EXIT);
+
+    Bind(wxEVT_MENU, [](wxCommandEvent& /*event*/) { wxGetApp().GetTopWindow()->Close(); }, wxID_EXIT);
 
     // --- Initial directory --------------------------------------------------
     wxString homeDir = wxGetHomeDir();
@@ -170,7 +168,17 @@ Return: None
 */
 void MainFrame::OnListDoubleClick(wxListEvent& event)
 {
-    wxString name = m_filePanel->GetSelectedName();
+    // Get the index of the row that was double-clicked from the event itself.
+    // Don't rely on the selection state, as the item may not be selected yet
+    // when the activation event fires.
+    long index = event.GetIndex();
+    if (index == -1)
+    {
+        return;
+    }
+
+    // Get the name from that specific row.
+    wxString name = m_filePanel->GetListCtrl()->GetItemText(index);
     if (name.IsEmpty())
     {
         return;
@@ -481,6 +489,14 @@ Return: Full path string
 */
 wxString MainFrame::FullPath(const wxString& name) const
 {
-    wxFileName fn(m_filePanel->CurrentPath(), name);
-    return fn.GetFullPath();
+    wxString currentPath = m_filePanel->CurrentPath();
+    
+    // Manually join the current directory with the name.
+    // Ensure there's exactly one separator between them.
+    if (!currentPath.EndsWith(wxFileName::GetPathSeparator()))
+    {
+        currentPath += wxFileName::GetPathSeparator();
+    }
+    
+    return currentPath + name;
 }
