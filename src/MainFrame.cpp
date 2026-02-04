@@ -187,7 +187,7 @@ void MainFrame::OnListDoubleClick(wxListEvent& event)
     wxString fullPath = FullPath(name);
     wxFileName fn(fullPath);
 
-    if (fn.DirExists())
+    if (wxFileName::DirExists(fullPath))
     {
         NavigateTo(fullPath);
     }

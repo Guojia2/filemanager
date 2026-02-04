@@ -97,12 +97,24 @@ bool FilePanel::LoadDirectory(const wxString& path)
     m_currentPath = path;
     m_fileList->DeleteAllItems();
 
+    // Collect all filenames first so we can sort them.
+    wxArrayString filenames;
     wxString filename;
     bool hasFile = directory.GetFirst(&filename);
-
-    long index = 0;
     while (hasFile)
     {
+        filenames.Add(filename);
+        hasFile = directory.GetNext(&filename);
+    }
+
+    // Sort alphabetically (case-insensitive).
+    filenames.Sort();
+
+    // Now populate the list with the sorted entries.
+    for (size_t i = 0; i < filenames.GetCount(); ++i)
+    {
+        filename = filenames[i];
+
         // Construct the full path to this item by joining the directory
         // path with the filename.  We can't use wxFileName(dir, file) because
         // that assumes 'file' is a file, not a potential subdirectory.
@@ -114,11 +126,14 @@ bool FilePanel::LoadDirectory(const wxString& path)
         fullPath += filename;
 
         // --- Name -----------------------------------------------------------
+        long index = m_fileList->GetItemCount();
         m_fileList->InsertItem(index, filename);
 
         // --- Type -----------------------------------------------------------
-        wxFileName file(fullPath);
-        if (file.DirExists())
+        // CRITICAL: Use the static wxFileName::DirExists(fullPath), NOT the
+        // instance method file.DirExists() which checks if the parent directory
+        // exists, not if fullPath itself is a directory.
+        if (wxFileName::DirExists(fullPath))
         {
             m_fileList->SetItem(index, COL_TYPE, "Directory");
         }
@@ -130,12 +145,13 @@ bool FilePanel::LoadDirectory(const wxString& path)
         // --- Size -----------------------------------------------------------
         // Directories don't have a meaningful "size" in most file managers;
         // show a dash for them.  For regular files, stat the size via wxFileName.
-        if (file.DirExists())
+        if (wxFileName::DirExists(fullPath))
         {
             m_fileList->SetItem(index, COL_SIZE, "—");
         }
         else
         {
+            wxFileName file(fullPath);
             if (file.GetSize().ToULong() != 0)
             {
                 m_fileList->SetItem(index, COL_SIZE,
@@ -148,10 +164,8 @@ bool FilePanel::LoadDirectory(const wxString& path)
         }
 
         // --- Modified -------------------------------------------------------
+        wxFileName file(fullPath);
         m_fileList->SetItem(index, COL_MODIFIED, FormatDate(file));
-
-        ++index;
-        hasFile = directory.GetNext(&filename);
     }
 
     return true;
